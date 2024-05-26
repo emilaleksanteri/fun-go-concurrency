@@ -19,7 +19,7 @@ type Result struct {
 	text string
 }
 
-func DoPools(poolSize int, fileDir string) {
+func DoPool(poolSize int, fileDir string) {
 	jobs := make(chan Work)
 	allResults := make(chan chan Result)
 	wg := sync.WaitGroup{}
