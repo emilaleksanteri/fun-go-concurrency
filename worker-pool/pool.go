@@ -19,11 +19,23 @@ type Result struct {
 	text string
 }
 
-func DoPool(poolSize int, fileDir string) {
+type WorkerPool struct {
+	poolSize int
+	fileDir  string
+}
+
+func NewWorkerPool(poolSize int, fileDir string) WorkerPool {
+	return WorkerPool{
+		poolSize: poolSize,
+		fileDir:  fileDir,
+	}
+}
+
+func (wp *WorkerPool) DoPool() {
 	jobs := make(chan Work)
 	allResults := make(chan chan Result)
 	wg := sync.WaitGroup{}
-	for i := 0; i < poolSize; i++ {
+	for i := 0; i < wp.poolSize; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -32,7 +44,7 @@ func DoPool(poolSize int, fileDir string) {
 	}
 	go func() {
 		defer close(allResults)
-		filepath.Walk(fileDir, func(path string, info fs.FileInfo, err error) error {
+		filepath.Walk(wp.fileDir, func(path string, info fs.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}

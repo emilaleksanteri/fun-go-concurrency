@@ -7,5 +7,6 @@ import (
 func TestDoPool(t *testing.T) {
 	dir := "./data"
 	poolSize := 2
-	DoPool(poolSize, dir)
+	pool := NewWorkerPool(poolSize, dir)
+	pool.DoPool()
 }
